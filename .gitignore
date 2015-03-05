@@ -11,6 +11,10 @@ Brackets.vcxproj
 appshell.sln
 libcef_dll_wrapper.vcxproj
 
+StarUML.vcxproj
+StarUML*.msi
+Brackets*.msi
+
 *.pbxuser
 *.perspective
 *.perspective3

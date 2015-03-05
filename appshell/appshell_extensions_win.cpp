@@ -1,25 +1,25 @@
 /*
  * Copyright (c) 2012 Adobe Systems Incorporated. All rights reserved.
- *  
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a
- * copy of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the 
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
- *  
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *  
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
- * 
- */ 
+ *
+ */
 
 #include "appshell_extensions.h"
 #include "native_menu_model.h"
@@ -140,7 +140,7 @@ bool LiveBrowserMgrWin::IsChromeWindow(HWND hwnd)
     ::GetWindowThreadProcessId(hwnd, &processId);
 
     HANDLE processHandle = ::OpenProcess( PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processId);
-    if( !processHandle ) { 
+    if( !processHandle ) {
         return false;
     }
 
@@ -222,16 +222,16 @@ void LiveBrowserMgrWin::CloseLiveBrowserKillTimers()
 void LiveBrowserMgrWin::CloseLiveBrowserFireCallback(int valToSend)
 {
     CefRefPtr<CefListValue> responseArgs = m_closeLiveBrowserCallback->GetArgumentList();
-    
+
     // kill the timers
     CloseLiveBrowserKillTimers();
-    
+
     // Set common response args (callbackId and error)
     responseArgs->SetInt(1, valToSend);
-    
+
     // Send response
     m_browser->SendProcessMessage(PID_RENDERER, m_closeLiveBrowserCallback);
-    
+
     // Clear state
     m_closeLiveBrowserCallback = NULL;
     m_browser = NULL;
@@ -287,7 +287,7 @@ static int CALLBACK SetInitialPathCallback(HWND hWnd, UINT uMsg, LPARAM lParam, 
     return 0;
 }
 
-static std::wstring GetPathToLiveBrowser() 
+static std::wstring GetPathToLiveBrowser()
 {
     HKEY hKey;
 
@@ -295,7 +295,7 @@ static std::wstring GetPathToLiveBrowser()
     // checks for installs for all users. If Chrome is only installed for the current user,
     // we fall back to the code below.
     if (ERROR_SUCCESS == RegOpenKeyEx(
-            HKEY_LOCAL_MACHINE, 
+            HKEY_LOCAL_MACHINE,
             L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.exe",
             0, KEY_READ, &hKey)) {
        wchar_t wpath[MAX_UNC_PATH] = {0};
@@ -314,10 +314,10 @@ static std::wstring GetPathToLiveBrowser()
     SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_CURRENT, localAppPath);
     std::wstring appPath(localAppPath);
     appPath += L"\\Google\\Chrome\\Application\\chrome.exe";
-        
+
     return appPath;
 }
-    
+
 static bool ConvertToShortPathName(std::wstring & path)
 {
     DWORD shortPathBufSize = MAX_UNC_PATH+1;
@@ -326,7 +326,7 @@ static bool ConvertToShortPathName(std::wstring & path)
     if( finalShortPathSize == 0 ) {
         return false;
     }
-        
+
     path.assign(shortPathBuf, finalShortPathSize);
     return true;
 }
@@ -360,7 +360,7 @@ int32 OpenLiveBrowser(ExtensionString argURL, bool enableRemoteDebugging)
     if (!CreateProcess(NULL, argsBuf.get(), NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
         return ConvertWinErrorCode(GetLastError());
     }
-        
+
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
 
@@ -370,7 +370,7 @@ int32 OpenLiveBrowser(ExtensionString argURL, bool enableRemoteDebugging)
 void CloseLiveBrowser(CefRefPtr<CefBrowser> browser, CefRefPtr<CefProcessMessage> response)
 {
     LiveBrowserMgrWin* liveBrowserMgr = LiveBrowserMgrWin::GetInstance();
-    
+
     if (liveBrowserMgr->GetCloseCallback() != NULL) {
         // We can only handle a single async callback at a time. If there is already one that hasn't fired then
         // we kill it now and get ready for the next.
@@ -496,8 +496,8 @@ int32 ShowOpenDialog(bool allowMultipleSelection,
         /* findAndReplaceString( fileTypesStr, std::string(" "), std::string(";*."));
         LPCWSTR allFilesFilter = L"All Files\0*.*\0\0";*/
 
-        ofn.lpstrFilter = L"All Files\0*.*\0Web Files\0*.js;*.css;*.htm;*.html\0\0";
-           
+        ofn.lpstrFilter = L"All Files\0*.*\0Model Files\0*.mdj;*.mfj;*.umlj;*.umlf\0StarUML (v1) Files\0*.uml\0\0";
+
         ofn.lpstrInitialDir = initialDirectory.c_str();
         ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR | OFN_EXPLORER;
         if (allowMultipleSelection)
@@ -569,9 +569,9 @@ int32 ShowSaveDialog(ExtensionString title,
     wcscpy(szFile, proposedNewFilename.c_str());
     ofn.lpstrFile = szFile;
     ofn.nMaxFile = MAX_UNC_PATH;
-    ofn.lpstrFilter = L"All Files\0*.*\0Web Files\0*.js;*.css;*.htm;*.html\0Text Files\0*.txt\0\0";
+    ofn.lpstrFilter = L"All Files\0*.*\0Model Files\0*.mdj;*.mfj*.umlj;*.umlf\0StarUML (v1) Files\0*.uml\0\0";
     ofn.lpstrInitialDir = initialDirectory.c_str();
-    ofn.Flags = OFN_ENABLESIZING | OFN_NOREADONLYRETURN | OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST | OFN_EXPLORER;
+    ofn.Flags = OFN_ENABLESIZING | OFN_NOREADONLYRETURN | OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST | OFN_EXPLORER | OFN_LONGNAMES;
     if (GetSaveFileName(&ofn)) {
         // return the validated filename using Unix-style paths
         absoluteFilepath = ofn.lpstrFile;
@@ -632,7 +632,7 @@ int32 ReadDir(ExtensionString path, CefRefPtr<CefListValue>& directoryContents)
         while (FindNextFile(hFind, &ffd) != 0);
 
         FindClose(hFind);
-    } 
+    }
     else {
         return ConvertWinErrorCode(GetLastError());
     }
@@ -706,7 +706,7 @@ int32 GetFileInfo(ExtensionString filename, uint32& modtime, bool& isDir, double
                 nChars = (*pfn)(hFile, pathBuffer, MAX_UNC_PATH, FILE_NAME_NORMALIZED | VOLUME_NAME_DOS);
                 if (nChars && nChars <= MAX_UNC_PATH) {
                     // Path returned by GetFilePathNameByHandle starts with "\\?\". Remove from returned value.
-                    realPath = &pathBuffer[4];  
+                    realPath = &pathBuffer[4];
 
                     // UNC paths start with UNC. Update here, if needed.
                     if (realPath.find(L"UNC") == 0) {
@@ -776,8 +776,8 @@ bool GetBufferAsUTF8(UTFValidationState& validationState)
 {
     if (validationState.dataLen == 0) {
         return true;
-    }    
-    
+    }
+
     // if we know it's UTF-16 or UTF-32 then bail
     if (hasUTF16_32(validationState)) {
         return false;
@@ -804,7 +804,7 @@ bool IsUTFLeadByte(char data)
            ((data & 0xE0) == 0xC0));  // 2 BYTE
 }
 
-// we can't validate something that's smaller than 12 bytes 
+// we can't validate something that's smaller than 12 bytes
 const int kMinValidationLength = 12;
 
 bool quickTestBufferForUTF8(UTFValidationState& validationState)
@@ -819,14 +819,14 @@ bool quickTestBufferForUTF8(UTFValidationState& validationState)
         return false;
     }
 
-    // If it has a UTF-8 BOM, then 
+    // If it has a UTF-8 BOM, then
     //  assume it's UTF8
     if (hasBOM(validationState)) {
         return true;
     }
 
-    // find the last lead byte and truncate 
-    //  the buffer beforehand and check that to avoid 
+    // find the last lead byte and truncate
+    //  the buffer beforehand and check that to avoid
     //  checking a malformed data stream
     for (int i = 1; i < 4; i++) {
         int index = (validationState.dataLen - i);
@@ -864,7 +864,7 @@ int32 ReadFile(ExtensionString filename, ExtensionString encoding, std::string& 
     int32 error = NO_ERROR;
 
     if (INVALID_HANDLE_VALUE == hFile)
-        return ConvertWinErrorCode(GetLastError()); 
+        return ConvertWinErrorCode(GetLastError());
 
     char* buffer = NULL;
     DWORD dwFileSize = GetFileSize(hFile, NULL);
@@ -873,30 +873,30 @@ int32 ReadFile(ExtensionString filename, ExtensionString encoding, std::string& 
         contents = "";
     } else {
         DWORD dwBytesRead;
-        
+
         // first just read a few bytes of the file
-        //  to check for a binary or text format 
+        //  to check for a binary or text format
         //  that we can't handle
 
         // we just want to read enough to satisfy the
         //  UTF-16 or UTF-32 test with or without a BOM
         // the UTF-8 test could result in a false-positive
-        //  but we'll check again with all bits if we 
+        //  but we'll check again with all bits if we
         //  think it's UTF-8 based on just a few characters
-        
+
         // if we're going to read fewer bytes than our
         //  quick test then we skip the quick test and just
         //  do the full test below since it will be fewer reads
 
-        // We need a buffer that can handle UTF16 or UTF32 with or without a BOM 
-        //  but with enough that we can test for true UTF data to test against 
-        //  without reading partial character streams roughly 1000 characters 
+        // We need a buffer that can handle UTF16 or UTF32 with or without a BOM
+        //  but with enough that we can test for true UTF data to test against
+        //  without reading partial character streams roughly 1000 characters
         //  at UTF32 should do it:
-        // 1000 chars + 32-bit BOM (UTF-32) = 4004 bytes 
-        // 1001 chars without BOM  (UTF-32) = 4004 bytes 
-        // 2001 chars + 16 bit BOM (UTF-16) = 4004 bytes 
-        // 2002 chars without BOM  (UTF-16) = 4004 bytes 
-        const DWORD quickTestSize = 4004; 
+        // 1000 chars + 32-bit BOM (UTF-32) = 4004 bytes
+        // 1001 chars without BOM  (UTF-32) = 4004 bytes
+        // 2001 chars + 16 bit BOM (UTF-16) = 4004 bytes
+        // 2002 chars without BOM  (UTF-16) = 4004 bytes
+        const DWORD quickTestSize = 4004;
         static char quickTestBuffer[quickTestSize+1];
 
         UTFValidationState validationState;
@@ -919,7 +919,7 @@ int32 ReadFile(ExtensionString filename, ExtensionString encoding, std::string& 
         }
 
         if (error == NO_ERROR) {
-            // either we did a quick test and we think it's UTF-8 or 
+            // either we did a quick test and we think it's UTF-8 or
             //  the file is small enough that we didn't spend the time
             //  to do a quick test so alloc the memory to read the entire
             //  file into memory and test it again...
@@ -935,20 +935,20 @@ int32 ReadFile(ExtensionString filename, ExtensionString encoding, std::string& 
                         error = ERR_UNSUPPORTED_ENCODING;
                     } else {
                         contents = std::string(buffer, validationState.dataLen);
-                    }        
+                    }
                 } else {
                     error = ConvertWinErrorCode(GetLastError(), false);
                 }
                 free(buffer);
 
             }
-            else { 
+            else {
                 error = ERR_UNKNOWN;
             }
         }
     }
     CloseHandle(hFile);
-    return error; 
+    return error;
 }
 
 int32 WriteFile(ExtensionString filename, std::string contents, ExtensionString encoding)
@@ -962,7 +962,7 @@ int32 WriteFile(ExtensionString filename, std::string contents, ExtensionString 
     int error = NO_ERROR;
 
     if (INVALID_HANDLE_VALUE == hFile)
-        return ConvertWinErrorCode(GetLastError(), false); 
+        return ConvertWinErrorCode(GetLastError(), false);
 
     // TODO (issue 67) -  Should write to temp file and handle encoding
     if (!WriteFile(hFile, contents.c_str(), contents.length(), &dwBytesWritten, NULL)) {
@@ -983,18 +983,18 @@ int32 SetPosixPermissions(ExtensionString filename, int32 mode)
     if ((dwAttr & FILE_ATTRIBUTE_DIRECTORY) != 0)
         return NO_ERROR;
 
-    bool write = (mode & 0200) != 0; 
+    bool write = (mode & 0200) != 0;
     bool read = (mode & 0400) != 0;
     int mask = (write ? _S_IWRITE : 0) | (read ? _S_IREAD : 0);
 
     if (_wchmod(filename.c_str(), mask) == -1) {
-        return ConvertErrnoCode(errno); 
+        return ConvertErrnoCode(errno);
     }
 
     return NO_ERROR;
 }
 
-int32 ShellDeleteFileOrDirectory(ExtensionString filename, bool allowUndo) 
+int32 ShellDeleteFileOrDirectory(ExtensionString filename, bool allowUndo)
 {
     DWORD dwAttr = GetFileAttributes(filename.c_str());
 
@@ -1029,7 +1029,7 @@ int32 ShellDeleteFileOrDirectory(ExtensionString filename, bool allowUndo)
     // http://msdn.microsoft.com/en-us/library/windows/desktop/bb762164(v=vs.85).aspx
     // So for now, just treat all errors as ERR_UNKNOWN
     if (SHFileOperation(&operation)) {
-        return ERR_UNKNOWN; 
+        return ERR_UNKNOWN;
     }
     return NO_ERROR;
 }
@@ -1068,7 +1068,7 @@ void BringBrowserWindowToFront(CefRefPtr<CefBrowser> browser)
 {
     if (browser.get()) {
         HWND hwnd = browser->GetHost()->GetWindowHandle();
-        if (hwnd) 
+        if (hwnd)
             ::BringWindowToTop(hwnd);
     }
 }
@@ -1144,7 +1144,7 @@ time_t FiletimeToTime(FILETIME const& ft) {
     ull.HighPart = ft.dwHighDateTime;
 
     // Convert the FILETIME from 100 nanosecond intervals into seconds
-    // and then subtract the number of seconds between 
+    // and then subtract the number of seconds between
     // Jan 1 1601 and Jan 1 1970
 
     const int64 NANOSECOND_INTERVALS = 10000000ULL;
@@ -1155,16 +1155,16 @@ time_t FiletimeToTime(FILETIME const& ft) {
 
 int32 ShowFolderInOSWindow(ExtensionString pathname) {
     ConvertToNativePath(pathname);
-    
+
     DWORD dwAttr = GetFileAttributes(pathname.c_str());
     if (dwAttr == INVALID_FILE_ATTRIBUTES) {
         return ConvertWinErrorCode(GetLastError());
     }
-    
+
     if ((dwAttr & FILE_ATTRIBUTE_DIRECTORY) != 0) {
         // Folder: open it directly, with nothing selected inside
         ShellExecute(NULL, L"open", pathname.c_str(), NULL, NULL, SW_SHOWDEFAULT);
-        
+
     } else {
         // File: open its containing folder with this file selected
         ITEMIDLIST *pidl = ILCreateFromPath(pathname.c_str());
@@ -1173,7 +1173,7 @@ int32 ShowFolderInOSWindow(ExtensionString pathname) {
             ILFree(pidl);
         }
     }
-    
+
     return NO_ERROR;
 }
 
@@ -1196,7 +1196,7 @@ int32 GetPendingFilesToOpen(ExtensionString& files) {
 }
 
 // Return index where menu or menu item should be placed.
-// -1 indicates append. -2 indicates 'before' - WINAPI supports 
+// -1 indicates append. -2 indicates 'before' - WINAPI supports
 // placing a menu before an item without needing the position.
 
 const int kAppend = -1;
@@ -1225,7 +1225,7 @@ int32 GetMenuPosition(CefRefPtr<CefBrowser> browser, const ExtensionString& comm
         memset(&parentItemInfo, 0, sizeof(MENUITEMINFO));
         parentItemInfo.cbSize = sizeof(MENUITEMINFO);
         parentItemInfo.fMask = MIIM_ID;
-        
+
         if (!GetMenuItemInfo(parentMenu, i, TRUE, &parentItemInfo)) {
             int err = GetLastError();
             return ConvertErrnoCode(err);
@@ -1265,7 +1265,7 @@ HMENU getMenu(CefRefPtr<CefBrowser> browser, const ExtensionString& id)
 }
 
 int32 getNewMenuPosition(CefRefPtr<CefBrowser> browser, const ExtensionString& parentId, const ExtensionString& position, const ExtensionString& relativeId, int32& positionIdx)
-{    
+{
     int32 errCode = NO_ERROR;
     ExtensionString pos = position;
     ExtensionString relId = relativeId;
@@ -1328,15 +1328,15 @@ int32 getNewMenuPosition(CefRefPtr<CefBrowser> browser, const ExtensionString& p
             MENUITEMINFO itemInfo = {0};
             itemInfo.cbSize = sizeof(MENUITEMINFO);
             itemInfo.fMask = MIIM_ID;
-                
+
             if (!GetMenuItemInfo(parentMenu, idx, TRUE, &itemInfo)) {
                 int err = GetLastError();
                 return ConvertErrnoCode(err);
             }
             relId = model.getCommandId(itemInfo.wID);
         }
-    } 
-    
+    }
+
     if ((pos == L"before" || pos == L"after") && relId.size() > 0) {
         if (pos == L"before") {
             positionIdx = kBefore;
@@ -1383,7 +1383,7 @@ int32 AddMenu(CefRefPtr<CefBrowser> browser, ExtensionString itemTitle, Extensio
         return NO_ERROR;
     }
 
-    bool inserted = false;    
+    bool inserted = false;
     int32 positionIdx;
     int32 errCode = getNewMenuPosition(browser, L"", position, relativeId, positionIdx);
 
@@ -1392,7 +1392,7 @@ int32 AddMenu(CefRefPtr<CefBrowser> browser, ExtensionString itemTitle, Extensio
     HMENU newMenu = CreateMenu();
     menuInfo.cbSize = sizeof(MENUITEMINFO);
     menuInfo.wID = (UINT)tag;
-    menuInfo.fMask = MIIM_ID | MIIM_DATA | MIIM_STRING | MIIM_FTYPE;    
+    menuInfo.fMask = MIIM_ID | MIIM_DATA | MIIM_STRING | MIIM_FTYPE;
 
 #ifdef DARK_UI
     menuInfo.fType = MFT_OWNERDRAW;
@@ -1400,8 +1400,8 @@ int32 AddMenu(CefRefPtr<CefBrowser> browser, ExtensionString itemTitle, Extensio
     menuInfo.fType = MFT_STRING;
 #endif
     menuInfo.dwTypeData = (LPWSTR)itemTitle.c_str();
-    menuInfo.cch = itemTitle.size();        
-        
+    menuInfo.cch = itemTitle.size();
+
     if (positionIdx == kAppend) {
         if (!InsertMenuItem(mainMenu, -1, TRUE, &menuInfo)) {
             return ConvertErrnoCode(GetLastError());
@@ -1423,7 +1423,7 @@ int32 AddMenu(CefRefPtr<CefBrowser> browser, ExtensionString itemTitle, Extensio
     return errCode;
 }
 
-// Return true if the unicode character is one of the symbols that can be used 
+// Return true if the unicode character is one of the symbols that can be used
 // directly as an accelerator key without converting it to its virtual key code.
 // Currently, we have the unicode minus symbol and up/down, left/right arrow keys.
 bool canBeUsedAsShortcutKey(int unicode)
@@ -1438,21 +1438,21 @@ bool UpdateAcceleratorTable(int32 tag, ExtensionString& keyStr)
         LPACCEL lpaccelNew;             // pointer to new accelerator table
         HACCEL haccelOld;               // handle to old accelerator table
         int numAccelerators = 0;        // number of accelerators in table
-        BYTE fAccelFlags = FVIRTKEY;    // fVirt flags for ACCEL structure 
+        BYTE fAccelFlags = FVIRTKEY;    // fVirt flags for ACCEL structure
 
-        // Save the current accelerator table. 
-        haccelOld = hAccelTable; 
+        // Save the current accelerator table.
+        haccelOld = hAccelTable;
 
-        // Count the number of entries in the current 
-        // table, allocate a buffer for the table, and 
+        // Count the number of entries in the current
+        // table, allocate a buffer for the table, and
         // then copy the table into the buffer.
-        numAccelerators = CopyAcceleratorTable(haccelOld, NULL, 0); 
+        numAccelerators = CopyAcceleratorTable(haccelOld, NULL, 0);
         numAccelerators++; // need room for one more
-        lpaccelNew = (LPACCEL) LocalAlloc(LPTR, numAccelerators * sizeof(ACCEL)); 
+        lpaccelNew = (LPACCEL) LocalAlloc(LPTR, numAccelerators * sizeof(ACCEL));
 
-        if (lpaccelNew != NULL) 
+        if (lpaccelNew != NULL)
         {
-            CopyAcceleratorTable(hAccelTable, lpaccelNew, numAccelerators); 
+            CopyAcceleratorTable(hAccelTable, lpaccelNew, numAccelerators);
         }
 
         // look at the passed-in key, pull out modifiers, etc.
@@ -1511,11 +1511,11 @@ bool UpdateAcceleratorTable(int32 tag, ExtensionString& keyStr)
             bool isFunctionKey = false;
             WCHAR fKey[4];
 
-            // Check for F1 to F15 function keys. Note that we have to count down here because 
+            // Check for F1 to F15 function keys. Note that we have to count down here because
             // we want F12 and such to be found before F1 and so on.
             for (int i = VK_F15; i >= VK_F1; i--) {
                 swprintf(fKey, sizeof(fKey), L"F%d", (i - VK_F1 + 1));
-            
+
                 if (keyStr.find(fKey) != ExtensionString::npos) {
                     lpaccelNew[newItem].key = i;
                     isFunctionKey = true;
@@ -1525,7 +1525,7 @@ bool UpdateAcceleratorTable(int32 tag, ExtensionString& keyStr)
 
             if (!isFunctionKey) {
                 int ascii = keyStr.at(keyStrLen-1);
- 
+
                 if  ( canBeUsedAsShortcutKey(ascii) || (ascii < 128 && isalnum(ascii)) ) {
                     lpaccelNew[newItem].key = ascii;
                 } else {
@@ -1534,29 +1534,29 @@ bool UpdateAcceleratorTable(int32 tag, ExtensionString& keyStr)
                     WORD vKey = (WORD)(keyCode & 0xFF);
                     bool isAltGr = ((keyCode & 0x600) == 0x600);
 
-                    // Get unshifted key from keyCode so that we can determine whether the 
+                    // Get unshifted key from keyCode so that we can determine whether the
                     // key is a shifted one or not.
-                    UINT unshiftedChar = ::MapVirtualKey(vKey, MAPVK_VK_TO_CHAR);    
+                    UINT unshiftedChar = ::MapVirtualKey(vKey, MAPVK_VK_TO_CHAR);
                     bool isDeadKey = ((unshiftedChar & 0x80000000) == 0x80000000);
-  
+
                     // If one of the following is found, then the shortcut is not available for the
-                    // current keyboard layout. 
+                    // current keyboard layout.
                     //
                     //     * keyCode is -1 -- meaning the key is not available on the current keyboard layout
-                    //     * is a dead key -- a key used to attach a specific diacritic to a base letter. 
+                    //     * is a dead key -- a key used to attach a specific diacritic to a base letter.
                     //     * is altGr character -- the character is only available when Ctrl and Alt keys are also pressed together.
                     //     * unshiftedChar is 0 -- meaning the key is not available on the current keyboard layout
-                    //     * The key is a shifted character sharing with one of the number keys on the keyboard. An example 
+                    //     * The key is a shifted character sharing with one of the number keys on the keyboard. An example
                     //       of this is the '/' key on German keyboard layout. It is a shifted key on number key '7'.
-                    // 
+                    //
                     // So don't update the accelerator table. Just return false here so that the
-                    // caller can remove the shortcut string from the menu title. 
+                    // caller can remove the shortcut string from the menu title.
                     if (keyCode == -1 || isDeadKey || isAltGr || unshiftedChar == 0 ||
                         (unshiftedChar >= '0' && unshiftedChar <= '9')) {
                         LocalFree(lpaccelNew);
                         return false;
                     }
-                    
+
                     lpaccelNew[newItem].key = vKey;
                 }
             }
@@ -1571,9 +1571,9 @@ bool UpdateAcceleratorTable(int32 tag, ExtensionString& keyStr)
         }
 
         if (!existingOne) {
-            // Create the new accelerator table, and 
+            // Create the new accelerator table, and
             // destroy the old one.
-            DestroyAcceleratorTable(haccelOld); 
+            DestroyAcceleratorTable(haccelOld);
             hAccelTable = CreateAcceleratorTable(lpaccelNew, numAccelerators);
         }
         LocalFree(lpaccelNew);
@@ -1588,18 +1588,18 @@ int32 RemoveKeyFromAcceleratorTable(int32 tag)
     HACCEL haccelOld;               // handle to old accelerator table
     int numAccelerators = 0;        // number of accelerators in table
 
-    // Save the current accelerator table. 
-    haccelOld = hAccelTable; 
+    // Save the current accelerator table.
+    haccelOld = hAccelTable;
 
-    // Count the number of entries in the current 
-    // table, allocate a buffer for the table, and 
+    // Count the number of entries in the current
+    // table, allocate a buffer for the table, and
     // then copy the table into the buffer.
     numAccelerators = CopyAcceleratorTable(haccelOld, NULL, 0);
-    lpaccelNew = (LPACCEL) LocalAlloc(LPTR, numAccelerators * sizeof(ACCEL)); 
+    lpaccelNew = (LPACCEL) LocalAlloc(LPTR, numAccelerators * sizeof(ACCEL));
 
-    if (lpaccelNew != NULL) 
+    if (lpaccelNew != NULL)
     {
-        CopyAcceleratorTable(hAccelTable, lpaccelNew, numAccelerators); 
+        CopyAcceleratorTable(hAccelTable, lpaccelNew, numAccelerators);
     }
 
     // Move accelerator to the end of the table
@@ -1607,7 +1607,7 @@ int32 RemoveKeyFromAcceleratorTable(int32 tag)
     for (int i = 0; i < numAccelerators; i++) {
         if (lpaccelNew[i].cmd == (WORD) tag) {
             lpaccelNew[i] = lpaccelNew[newItem];
-            DestroyAcceleratorTable(haccelOld); 
+            DestroyAcceleratorTable(haccelOld);
             hAccelTable = CreateAcceleratorTable(lpaccelNew, numAccelerators - 1);
             return NO_ERROR;
         }
@@ -1616,7 +1616,7 @@ int32 RemoveKeyFromAcceleratorTable(int32 tag)
     return ERR_NOT_FOUND;
 }
 
-ExtensionString GetDisplayKeyString(const ExtensionString& keyStr) 
+ExtensionString GetDisplayKeyString(const ExtensionString& keyStr)
 {
     ExtensionString result = keyStr;
 
@@ -1658,7 +1658,7 @@ int32 AddMenuItem(CefRefPtr<CefBrowser> browser, ExtensionString parentCommand, 
         parentItemInfo.hSubMenu = CreateMenu();
         parentItemInfo.fMask = MIIM_SUBMENU;
         if (!SetMenuItemInfo(menu, parentTag, FALSE, &parentItemInfo)) {
-            return ConvertErrnoCode(GetLastError());        
+            return ConvertErrnoCode(GetLastError());
         }
     }
     submenu = parentItemInfo.hSubMenu;
@@ -1687,7 +1687,7 @@ int32 AddMenuItem(CefRefPtr<CefBrowser> browser, ExtensionString parentCommand, 
         title = title + L"\t" + displayKeyStr;
     }
 
-    // Add shortcut to the accelerator table first. If the shortcut cannot 
+    // Add shortcut to the accelerator table first. If the shortcut cannot
     // be added, then don't show it in the menu title.
     if (!isSeparator && !UpdateAcceleratorTable(tag, keyStr)) {
         title = title.substr(0, title.find('\t'));
@@ -1696,19 +1696,19 @@ int32 AddMenuItem(CefRefPtr<CefBrowser> browser, ExtensionString parentCommand, 
     int32 positionIdx;
     int32 errCode = getNewMenuPosition(browser, parentCommand, position, relativeId, positionIdx);
     bool inserted = false;
-    if (positionIdx >= 0 || positionIdx == kBefore) 
+    if (positionIdx >= 0 || positionIdx == kBefore)
     {
         MENUITEMINFO menuInfo;
-        memset(&menuInfo, 0, sizeof(MENUITEMINFO));        
+        memset(&menuInfo, 0, sizeof(MENUITEMINFO));
         menuInfo.cbSize = sizeof(MENUITEMINFO);
         menuInfo.wID = (UINT)tag;
-        menuInfo.fMask = MIIM_ID | MIIM_DATA | MIIM_STRING | MIIM_FTYPE;    
+        menuInfo.fMask = MIIM_ID | MIIM_DATA | MIIM_STRING | MIIM_FTYPE;
         menuInfo.fType = MFT_STRING;
         if (isSeparator) {
             menuInfo.fType = MFT_SEPARATOR;
         }
         menuInfo.dwTypeData = (LPWSTR)title.c_str();
-        menuInfo.cch = itemTitle.size();        
+        menuInfo.cch = itemTitle.size();
         if (positionIdx >= 0) {
             InsertMenuItem(submenu, positionIdx, TRUE, &menuInfo);
             inserted = true;
@@ -1729,7 +1729,7 @@ int32 AddMenuItem(CefRefPtr<CefBrowser> browser, ExtensionString parentCommand, 
     {
         BOOL res;
 
-        if (isSeparator) 
+        if (isSeparator)
         {
             res = AppendMenu(submenu, MF_SEPARATOR, NULL, NULL);
         } else {
@@ -1740,14 +1740,14 @@ int32 AddMenuItem(CefRefPtr<CefBrowser> browser, ExtensionString parentCommand, 
             return ConvertErrnoCode(GetLastError());
         }
     }
-    
+
     NativeMenuModel::getInstance(getMenuParent(browser)).setOsItem(tag, (void*)submenu);
 
     return errCode;
 }
 
 int32 GetMenuItemState(CefRefPtr<CefBrowser> browser, ExtensionString commandId, bool& enabled, bool& checked, int& index) {
-    static WCHAR titleBuf[MAX_LOADSTRING];  
+    static WCHAR titleBuf[MAX_LOADSTRING];
     int32 tag = NativeMenuModel::getInstance(getMenuParent(browser)).getTag(commandId);
     if (tag == kTagNotFound) {
         return ERR_NOT_FOUND;
@@ -1859,11 +1859,11 @@ int32 SetMenuTitle(CefRefPtr<CefBrowser> browser, ExtensionString command, Exten
     }
 
     HMENU mainMenu = GetMenu((HWND)getMenuParent(browser));
-    if (menu == mainMenu) 
+    if (menu == mainMenu)
     {
         // If we're changing the titles of top-level menu items
         //  we must remove and reinsert the menu so that the item
-        //  can be remeasured otherwise the window doesn't get a 
+        //  can be remeasured otherwise the window doesn't get a
         //  WM_MEASUREITEM to relayout the menu bar
         if (wcscmp(newTitle.c_str(), titleBuf) != 0) {
             int position = GetMenuItemPosition(mainMenu, (UINT)tag);
@@ -1883,17 +1883,17 @@ int32 SetMenuTitle(CefRefPtr<CefBrowser> browser, ExtensionString command, Exten
 #endif
             menuInfo.dwTypeData = (LPWSTR)newTitle.c_str();
             menuInfo.hSubMenu = itemInfo.hSubMenu;
-            menuInfo.cch = newTitle.size();        
-        
+            menuInfo.cch = newTitle.size();
+
             InsertMenuItem(mainMenu, position, TRUE, &menuInfo);
         }
 
-    } else { 
+    } else {
         itemInfo.fType = MFT_STRING; // just to make sure
         itemInfo.dwTypeData = (LPWSTR)newTitle.c_str();
         itemInfo.cch = newTitle.size();
         if (!SetMenuItemInfo(menu, tag, FALSE, &itemInfo)) {
-            return ConvertErrnoCode(GetLastError());        
+            return ConvertErrnoCode(GetLastError());
         }
     }
 
@@ -1904,7 +1904,7 @@ int32 SetMenuTitle(CefRefPtr<CefBrowser> browser, ExtensionString command, Exten
 }
 
 int32 GetMenuTitle(CefRefPtr<CefBrowser> browser, ExtensionString commandId, ExtensionString& title) {
-    static WCHAR titleBuf[MAX_LOADSTRING];  
+    static WCHAR titleBuf[MAX_LOADSTRING];
     int32 tag = NativeMenuModel::getInstance(getMenuParent(browser)).getTag(commandId);
     if (tag == kTagNotFound) {
         return ERR_NOT_FOUND;
@@ -1969,7 +1969,7 @@ int32 SetMenuItemShortcut(CefRefPtr<CefBrowser> browser, ExtensionString command
     }
 
     // Update menu title
-    static WCHAR titleBuf[MAX_LOADSTRING];  
+    static WCHAR titleBuf[MAX_LOADSTRING];
     MENUITEMINFO itemInfo = {0};
     itemInfo.cbSize = sizeof(MENUITEMINFO);
     itemInfo.fMask = MIIM_DATA | MIIM_STRING;
@@ -1994,7 +1994,7 @@ int32 SetMenuItemShortcut(CefRefPtr<CefBrowser> browser, ExtensionString command
     itemInfo.cch = titleStr.size();
 
     if (!SetMenuItemInfo(menu, tag, FALSE, &itemInfo)) {
-        return ConvertErrnoCode(GetLastError());        
+        return ConvertErrnoCode(GetLastError());
     }
 
     return NO_ERROR;
@@ -2034,6 +2034,6 @@ void DragWindow(CefRefPtr<CefBrowser> browser) {
     HWND browserHwnd = (HWND)getMenuParent(browser);
     SendMessage(browserHwnd, WM_NCLBUTTONDOWN, HTCAPTION, 0);
 }
-    
+
 
 

@@ -1,19 +1,19 @@
 #!/bin/bash
-echo 'installing brackets to your ~/.local directory'
+echo 'installing staruml to your ~/.local directory'
 
 curDir=$(pwd)
 
 mkdir -p ~/.local/share/applications
 mkdir -p ~/.local/bin
 
-# Setup our brackets.desktop file.
-cp brackets.desktop temp.desktop
-execPath="$curDir/brackets"
-iconPath="$curDir/brackets.svg"
+# Setup our staruml.desktop file.
+cp staruml.desktop temp.desktop
+execPath="$curDir/staruml"
+iconPath="$curDir/staruml.svg"
 
-sed -i 's|Exec=brackets|Exec='$execPath'|g' temp.desktop
-sed -i 's|Icon=brackets|Icon='$iconPath'|g' temp.desktop
-cp temp.desktop ~/.local/share/applications/brackets.desktop
+sed -i 's|Exec=staruml|Exec='$execPath'|g' temp.desktop
+sed -i 's|Icon=staruml|Icon='$iconPath'|g' temp.desktop
+cp temp.desktop ~/.local/share/applications/staruml.desktop
 rm temp.desktop
 
 # Run xdg-desktop-menu to register the .desktop file.
@@ -24,11 +24,11 @@ if [ ! -x "$XDG_DESKTOP_MENU" ]; then
   echo "Error: Could not find xdg-desktop-menu" >&2
   exit 1
 fi
-"$XDG_DESKTOP_MENU" install ~/.local/share/applications/brackets.desktop --novendor
+"$XDG_DESKTOP_MENU" install ~/.local/share/applications/staruml.desktop --novendor
 
-# Symlink brackets executable to our current location... where-ever that is.
-rm -f ~/.local/bin/brackets
-ln -s $execPath ~/.local/bin/brackets
+# Symlink staruml executable to our current location... where-ever that is.
+rm -f ~/.local/bin/staruml
+ln -s $execPath ~/.local/bin/staruml
 
 # Try to symlink libudev.so.0 to the current directory.
 # Gratefully borrowed from https://github.com/rogerwang/node-webkit/wiki/The-solution-of-lacking-libudev.so.0
@@ -47,4 +47,4 @@ do
   fi
 done
 
-echo 'installed brackets to ~/.local'
+echo 'installed staruml to ~/.local'

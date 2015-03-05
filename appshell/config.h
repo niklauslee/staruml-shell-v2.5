@@ -32,19 +32,19 @@
 // Name of group (if any) that application prefs/settings/etc. are stored under
 // This must be an empty string (for no group), or a string that ends with "\\"
 #define GROUP_NAME L""
-#define APP_NAME L"Brackets"
+#define APP_NAME L"StarUML"
 #define WINDOW_TITLE APP_NAME
 
 // Paths for node resources are relative to the location of the appshell executable
 #define NODE_EXECUTABLE_PATH "node.exe"
 #define NODE_CORE_PATH "node-core"
-#define FIRST_INSTANCE_MUTEX_NAME	(APP_NAME L".Shell.Instance")
+#define FIRST_INSTANCE_MUTEX_NAME    (APP_NAME L".Shell.Instance")
 #endif
 #ifdef OS_MACOSX
 // Name of group (if any) that application prefs/settings/etc. are stored under
 // This must be an empty string (for no group), or a string that ends with "/"
 #define GROUP_NAME @""
-#define APP_NAME @"Brackets"
+#define APP_NAME @"StarUML"
 #define WINDOW_TITLE APP_NAME
 
 // Paths for node resources are relative to the bundle path
@@ -64,10 +64,10 @@
 
 #endif
 
-#define REMOTE_DEBUGGING_PORT 9234
+#define REMOTE_DEBUGGING_PORT 9235
 
 // Comment out this line to enable OS themed drawing
-#define DARK_UI 
+#define DARK_UI
 #define DARK_AERO_GLASS
 #define CUSTOM_TRAFFIC_LIGHTS
 #define LIGHT_CAPTION_TEXT

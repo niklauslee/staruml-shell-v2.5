@@ -10,10 +10,10 @@ NSS_FILES="libnspr4.so.0d libplds4.so.0d libplc4.so.0d libssl3.so.1d \
 remove_nss_symlinks() {
   for f in $NSS_FILES
   do
-    rm -rf "/opt/brackets/$f"
+    rm -rf "/opt/staruml/$f"
   done
 }
 
 remove_nss_symlinks
 
-rm -rf "/opt/brackets/libudev.so.0"
+rm -rf "/opt/staruml/libudev.so.0"

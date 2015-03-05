@@ -3,20 +3,18 @@
 default="build.mul">
 
   <!-- Key locations on disk -->
-  <property name="wix.base" value="C:\Program Files (x86)\Windows Installer XML v3.5"/>
+  <property name="wix.base" value="C:\Program Files\Windows Installer XML v3.5"/>
 
   <property name="brackets.staging" value=".\staging"/>
 
 
   <!-- Product & version labeling -->
   <!-- See also: product name definitions in Brackets_<locale>.wxl -->
-  <property name="product.shortname" value="Brackets"/>
-  <property name="product.release.number.major" value="1"/>
-  <property name="product.release.number.minor" value="2"/>
-  <property name="product.version.number" value="${product.release.number.major}.${product.release.number.minor}"/>
-  <property name="product.version.name" value="Release ${product.version.number}"/>
-  <property name="product.fullname" value="Brackets ${product.version.name}"/>
-  <property name="product.manufacturer" value="brackets.io"/>
+  <property name="product.shortname" value="StarUML"/>
+  <property name="product.version.number" value="2.1.0"/>
+  <property name="product.version.name" value="v${product.version.number}"/>
+  <property name="product.fullname" value="StarUML-${product.version.name}"/>
+  <property name="product.manufacturer" value="MKLab"/>
   <property name="product.registry.root" value="${product.shortname}"/>
 
 
@@ -41,45 +39,45 @@ default="build.mul">
     <echo message="Prepping installer source."/>
     <exec dir="" executable="${candle.cmd}">
       <arg line="Brackets.wxs
-		              WixUI_InstallDir.wxs
-		              ExitDialog.wxs
-		              UserExit.wxs
-		              ProgressDlg.wxs
-		              MaintenanceWelcomeDlg.wxs
-		              InstallDirDlg.wxs
-		              bracketsharvestmanager.wxs
-		              VerifyReadyDlg.wxs
-		              BrowseDlg.wxs
-		              -ext WixUtilExtension
-		              -dcodepage=1252
-		              -dProductVersionNumber='${product.version.number}'
-		              -dProductVersionName='${product.version.name}'
-		              -dProductManufacturer='${product.manufacturer}'
-		              -dRegistryRoot='${product.registry.root}'
-		              -dExeName='${product.shortname}'
-		              -dIconFile=appicon.ico
-		              -dlicenseRtf=License.rtf"/>
+                      WixUI_InstallDir.wxs
+                      ExitDialog.wxs
+                      UserExit.wxs
+                      ProgressDlg.wxs
+                      MaintenanceWelcomeDlg.wxs
+                      InstallDirDlg.wxs
+                      bracketsharvestmanager.wxs
+                      VerifyReadyDlg.wxs
+                      BrowseDlg.wxs
+                      -ext WixUtilExtension
+                      -dcodepage=1252
+                      -dProductVersionNumber='${product.version.number}'
+                      -dProductVersionName='${product.version.name}'
+                      -dProductManufacturer='${product.manufacturer}'
+                      -dRegistryRoot='${product.registry.root}'
+                      -dExeName='${product.shortname}'
+                      -dIconFile=appicon.ico
+                      -dlicenseRtf=License.rtf"/>
     </exec>
 
     <echo message="Compiling installer package."/>
     <exec dir="" executable="${light.cmd}">
       <arg line="-b ${brackets.staging}
-		                 -dvar.Version=${product.version.number}
-		                 -ext WixUIExtension
-		                 -ext WixUtilExtension
-		                 -cultures:en-us
-		                 Brackets.wixobj
-		                 bracketsharvestmanager.wixobj
-		                 WixUI_InstallDir.wixobj
-		                 ExitDialog.wixobj
-		                 InstallDirDlg.wixobj
-		                 UserExit.wixobj
-		                 ProgressDlg.wixobj
-		                 MaintenanceWelcomeDlg.wixobj
-		                 BrowseDlg.wixobj
-		                 VerifyReadyDlg.wixobj
-		                 -out '${product.fullname}.msi'
-		                 -loc Brackets_en-us.wxl"/>
+                         -dvar.Version=${product.version.number}
+                         -ext WixUIExtension
+                         -ext WixUtilExtension
+                         -cultures:en-us
+                         Brackets.wixobj
+                         bracketsharvestmanager.wixobj
+                         WixUI_InstallDir.wixobj
+                         ExitDialog.wixobj
+                         InstallDirDlg.wixobj
+                         UserExit.wixobj
+                         ProgressDlg.wixobj
+                         MaintenanceWelcomeDlg.wixobj
+                         BrowseDlg.wixobj
+                         VerifyReadyDlg.wixobj
+                         -out '${product.fullname}.msi'
+                         -loc Brackets_en-us.wxl"/>
     </exec>
 
   </target>
@@ -95,45 +93,45 @@ default="build.mul">
     <echo message="Prepping installer source."/>
     <exec dir="" executable="${candle.cmd}" >
       <arg line="Brackets.wxs
-		              WixUI_InstallDir.wxs
-		              ExitDialog.wxs
-		              UserExit.wxs
-		              ProgressDlg.wxs
-		              MaintenanceWelcomeDlg.wxs
-		              BrowseDlg.wxs
-		              InstallDirDlg.wxs
-		              bracketsharvestmanager.wxs
-		              VerifyReadyDlg.wxs
-		              -ext WixUtilExtension
-		              -dcodepage=1252
-		              -dProductVersionNumber='${product.version.number}'
-		              -dProductVersionName='${product.version.name}'
-		              -dProductManufacturer='${product.manufacturer}'
-		              -dRegistryRoot='${product.registry.root}'
-		              -dExeName='${product.shortname}'
-		              -dIconFile=appicon.ico
-		              -dlicenseRtf=License.rtf"/>
+                      WixUI_InstallDir.wxs
+                      ExitDialog.wxs
+                      UserExit.wxs
+                      ProgressDlg.wxs
+                      MaintenanceWelcomeDlg.wxs
+                      BrowseDlg.wxs
+                      InstallDirDlg.wxs
+                      bracketsharvestmanager.wxs
+                      VerifyReadyDlg.wxs
+                      -ext WixUtilExtension
+                      -dcodepage=1252
+                      -dProductVersionNumber='${product.version.number}'
+                      -dProductVersionName='${product.version.name}'
+                      -dProductManufacturer='${product.manufacturer}'
+                      -dRegistryRoot='${product.registry.root}'
+                      -dExeName='${product.shortname}'
+                      -dIconFile=appicon.ico
+                      -dlicenseRtf=License.rtf"/>
     </exec>
 
     <echo message="Compiling installer package."/>
     <exec dir="" executable="${light.cmd}">
       <arg line="-b ${brackets.staging}
-		                 -dvar.Version=${product.version.number}
-		                 -ext WixUIExtension
-		                 -ext WixUtilExtension
-		                 -cultures:fr-fr
-		                 Brackets.wixobj
-		                 bracketsharvestmanager.wixobj
-		                 WixUI_InstallDir.wixobj
-		                 ExitDialog.wixobj
-		                 InstallDirDlg.wixobj
-		                 UserExit.wixobj
-		                 ProgressDlg.wixobj
-		                 MaintenanceWelcomeDlg.wixobj
-		                 BrowseDlg.wixobj
-		                 VerifyReadyDlg.wixobj
-		                 -out Brackets_fr-fr.msi
-		                 -loc Brackets_fr-fr.wxl"/>
+                         -dvar.Version=${product.version.number}
+                         -ext WixUIExtension
+                         -ext WixUtilExtension
+                         -cultures:fr-fr
+                         Brackets.wixobj
+                         bracketsharvestmanager.wixobj
+                         WixUI_InstallDir.wixobj
+                         ExitDialog.wixobj
+                         InstallDirDlg.wixobj
+                         UserExit.wixobj
+                         ProgressDlg.wixobj
+                         MaintenanceWelcomeDlg.wixobj
+                         BrowseDlg.wixobj
+                         VerifyReadyDlg.wixobj
+                         -out Brackets_fr-fr.msi
+                         -loc Brackets_fr-fr.wxl"/>
     </exec>
 
   </target>

@@ -35,7 +35,7 @@ module.exports = function (grunt) {
     } else if (platform === "win") {
         staging = "installer/win/staging";
     } else {
-        staging = "installer/linux/debian/package-root/opt/brackets";
+        staging = "installer/linux/debian/package-root/opt/staruml";
     }
 
     grunt.initConfig({
@@ -107,7 +107,7 @@ module.exports = function (grunt) {
                         "src"       : [
                             "locales/**",
                             "node-core/**",
-                            "Brackets.exe",
+                            "StarUML.exe",
                             "node.exe",
                             "cef.pak",
                             "cef_100_percent.pak",
@@ -154,7 +154,7 @@ module.exports = function (grunt) {
                             "locales/**",
                             "node-core/**",
                             "appshell*.png",
-                            "Brackets",
+                            "StarUML",
                             "Brackets-node",
                             "cef.pak",
                             "devtools_resources.pak"
@@ -165,8 +165,8 @@ module.exports = function (grunt) {
                         "expand"    : true,
                         "cwd"       : "installer/linux/debian/",
                         "src"       : [
-                            "brackets.desktop",
-                            "brackets"
+                            "staruml.desktop",
+                            "staruml"
                         ],
                         "dest"      : "<%= build.staging %>"
                     }
@@ -185,6 +185,20 @@ module.exports = function (grunt) {
             },
             "samples": {
                 "files": [
+                    {
+                        "dot"       : true,
+                        "expand"    : true,
+                        "cwd"       : "<%= git.www.repo %>/templates",
+                        "src"       : ["**"],
+                        "dest"      : "<%= build.staging %>/templates/"
+                    },
+                    {
+                        "dot"       : true,
+                        "expand"    : true,
+                        "cwd"       : "<%= git.www.repo %>/profiles",
+                        "src"       : ["**"],
+                        "dest"      : "<%= build.staging %>/profiles/"
+                    },
                     {
                         "dot"       : true,
                         "expand"    : true,
@@ -208,12 +222,12 @@ module.exports = function (grunt) {
             }
         },
         "build": {
-            "name"              : "Brackets",
+            "name"              : "StarUML",
             "staging"           : staging
         },
         "git": {
             "www": {
-                "repo"      : "../brackets",    // TODO user configurable?
+                "repo"      : "../staruml",    // TODO user configurable?
                 "branch"    : grunt.option("www-branch") || ""
             },
             "shell": {

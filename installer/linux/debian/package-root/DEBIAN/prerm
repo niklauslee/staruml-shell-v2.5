@@ -20,9 +20,9 @@ if [ ! -x "$XDG_ICON_RESOURCE" ]; then
   echo "Error: Could not find xdg-icon-resource" >&2
   exit 1
 fi
-for icon in "/opt/brackets/appshell"*.png; do
+for icon in "/opt/staruml/appshell"*.png; do
   size="${icon##*/appshell}"
-  "$XDG_ICON_RESOURCE" uninstall --size "${size%.png}" "brackets"
+  "$XDG_ICON_RESOURCE" uninstall --size "${size%.png}" "staruml"
 done
 
 # Remove the entry from the system menu
@@ -32,7 +32,7 @@ if [ ! -x "$XDG_DESKTOP_MENU" ]; then
   echo "Error: Could not find xdg-desktop-menu" >&2
   exit 1
 fi
-"$XDG_DESKTOP_MENU" uninstall /opt/brackets/brackets.desktop
+"$XDG_DESKTOP_MENU" uninstall /opt/staruml/staruml.desktop
 
 if [ -x "$UPDATE_MENUS" ]; then
   update-menus

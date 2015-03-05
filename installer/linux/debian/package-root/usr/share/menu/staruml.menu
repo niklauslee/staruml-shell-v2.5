@@ -1,0 +1,6 @@
+?package(staruml):needs="x11" \
+  section="Development" \
+  hints="Software Modeler" \
+  title="StarUML" \
+  icon="/opt/staruml/appshell32.png" \
+  command="/usr/bin/staruml"

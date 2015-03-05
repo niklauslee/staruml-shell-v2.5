@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # config
-releaseName="Brackets"
-version="1.2"
-dmgName="${releaseName} Release ${version}"
+releaseName="StarUML"
+version="2.1.0"
+dmgName="${releaseName}-v${version}"
 format="bzip2"
 encryption="none"
 tmpLayout="./dropDmgConfig/layouts/tempLayout"

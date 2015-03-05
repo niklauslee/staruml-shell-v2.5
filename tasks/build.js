@@ -224,10 +224,10 @@ module.exports = function (grunt) {
 
         var done = this.async(),
             version = semver.parse(grunt.config("pkg").version),
-            release = version.major + "." + version.minor;
+            release = version.major + "." + version.minor + "." + version.patch;
 
         spawn(["bash build_installer.sh"], { cwd: resolve("installer/linux"), env: getBracketsEnv() }).then(function () {
-            return common.rename("installer/linux/brackets.deb", "installer/linux/Brackets Release " + release + " " + common.arch() + "-bit.deb");
+            return common.rename("installer/linux/staruml.deb", "installer/linux/StarUML-v" + release + "-" + common.arch() + "-bit.deb");
         }).then(function () {
             done();
         }, function (err) {
@@ -243,7 +243,7 @@ module.exports = function (grunt) {
             release = version.major + "." + version.minor;
 
         spawn(["bash build_archive.sh"], { cwd: resolve("installer/linux"), env: getBracketsEnv() }).then(function () {
-            return common.rename("installer/linux/brackets.tar.gz", "installer/linux/Brackets Release " + release + " " + common.arch() + "-bit.tar.gz");
+            return common.rename("installer/linux/staruml.tar.gz", "installer/linux/StarUML-v" + release + "-" + common.arch() + "-bit.tar.gz");
         }).then(function () {
             done();
         }, function (err) {
