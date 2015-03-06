@@ -569,7 +569,7 @@ int32 ShowSaveDialog(ExtensionString title,
     wcscpy(szFile, proposedNewFilename.c_str());
     ofn.lpstrFile = szFile;
     ofn.nMaxFile = MAX_UNC_PATH;
-    ofn.lpstrFilter = L"All Files\0*.*\0Model Files\0*.mdj;*.mfj*.umlj;*.umlf\0StarUML (v1) Files\0*.uml\0\0";
+    ofn.lpstrFilter = L"All Files\0*.*\0Model Files\0*.mdj;*.mfj;*.umlj;*.umlf\0StarUML (v1) Files\0*.uml\0\0";
     ofn.lpstrInitialDir = initialDirectory.c_str();
     ofn.Flags = OFN_ENABLESIZING | OFN_NOREADONLYRETURN | OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST | OFN_EXPLORER | OFN_LONGNAMES;
     if (GetSaveFileName(&ofn)) {
