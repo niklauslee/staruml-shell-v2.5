@@ -2,7 +2,7 @@
 
 # config
 releaseName="StarUML"
-version="2.1.0"
+version="2.3.0"
 dmgName="${releaseName}-v${version}"
 format="bzip2"
 encryption="none"

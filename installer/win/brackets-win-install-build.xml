@@ -11,7 +11,7 @@ default="build.mul">
   <!-- Product & version labeling -->
   <!-- See also: product name definitions in Brackets_<locale>.wxl -->
   <property name="product.shortname" value="StarUML"/>
-  <property name="product.version.number" value="2.1.0"/>
+  <property name="product.version.number" value="2.3.0"/>
   <property name="product.version.name" value="v${product.version.number}"/>
   <property name="product.fullname" value="StarUML-${product.version.name}"/>
   <property name="product.manufacturer" value="MKLab"/>
